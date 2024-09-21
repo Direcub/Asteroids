@@ -6,6 +6,7 @@ from asteroid import Asteroid
 
 
 def main():
+    score = 0
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     time = pygame.time.Clock()
@@ -29,10 +30,16 @@ def main():
         screen.fill("black")
         for thing in updatable:
             thing.update(dt)
-            for thing in asteroids:
-                if thing.collision(player1) == True:
-                    print("Game over!")
-                    exit()
+        for thing in asteroids:
+            if thing.collision(player1) == True:
+                print("Game over!")
+                print(f"final score: {score}")
+                exit()
+        for rock in asteroids:
+            for bullet in shots:
+                if pygame.math.Vector2.distance_to(rock.position, bullet.position) < rock.radius or pygame.math.Vector2.distance_to(rock.position, bullet.position) < bullet.radius:
+                    rock.split()
+                    score += 1
         for thing in drawable:
             thing.draw(screen)
         pygame.display.flip()
